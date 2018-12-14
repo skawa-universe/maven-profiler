@@ -6,7 +6,7 @@
 
 	<groupId>hu.skawa</groupId>
 	<artifactId>profiler</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.0</version>
 
 	<repositories>
 		<repository>
@@ -102,6 +102,12 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+
 		<!-- dependency for plexus annotation -->
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
@@ -112,6 +118,18 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>27.0.1-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>uk.org.lidalia</groupId>
+			<artifactId>slf4j-test</artifactId>
+			<version>1.2.0</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

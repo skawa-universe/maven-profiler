@@ -1,9 +1,9 @@
 package hu.skawa.profiler.reporters;
 
-import com.google.common.base.Stopwatch;
+import hu.skawa.profiler.models.Project;
 
-import java.util.Map;
+import com.google.common.collect.Multimap;
 
 public interface Reporter {
-	String report(Map<String, Map<String, Map<String, Stopwatch>>> timing);
+	void report(Multimap<String, Project> timings);
 }
