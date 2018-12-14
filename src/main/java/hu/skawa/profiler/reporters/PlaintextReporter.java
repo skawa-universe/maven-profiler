@@ -1,22 +1,38 @@
 package hu.skawa.profiler.reporters;
 
-import com.google.common.base.Stopwatch;
+import hu.skawa.profiler.models.Goal;
+import hu.skawa.profiler.models.LifecyclePhase;
+import hu.skawa.profiler.models.Project;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import org.slf4j.Logger;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PlaintextReporter implements Reporter {
 	@Override
-	public String report(Map<String, Map<String, Map<String, Stopwatch>>> timing) {
-		StringBuilder sb = new StringBuilder("----- PROFILING INFO -----");
-		sb.append("\n");
-		timing.forEach((p, phases) -> {
-			sb.append(p).append(":\n");
-			phases.forEach((phase, mojos) -> {
-				sb.append("\t").append(phase).append(":\n");
-				mojos.forEach((mojo, stopwatch) -> sb.append(String.format("\t\t%1$s: %2$s\n", mojo, formatDurationForLog(stopwatch.elapsed().toMillis()))));
+	public void report(Multimap<String, Project> timing) {
+		LOGGER.info("----- PROFILING INFO -----");
+
+		timing.forEach((projectName, project) -> {
+			LOGGER.info(String.format("%1$s:", projectName));
+			Map<String, List<Goal>> goals = project.getGoals().stream().collect(Collectors.groupingBy(Goal::getPhaseAsString));
+
+			List<String> phases = Lists.newArrayList(goals.keySet());
+			phases.sort(Comparator.comparingInt(LifecyclePhase::getIndexForSorting));
+
+			phases.forEach(phase -> {
+				LOGGER.info("\t" + phase + ":");
+				List<Goal> goalsInPhase = goals.get(phase);
+				goalsInPhase.forEach(goal -> LOGGER.info("\t\t" + goal.getName() + ": " + formatDurationForLog(goal.getStopwatch().elapsed().toMillis())));
 			});
 		});
-		return sb.toString();
 	}
 
 	private String formatDurationForLog(Long millis) {
@@ -73,5 +89,9 @@ public class PlaintextReporter implements Reporter {
 		return target.append(value);
 	}
 
+	private Logger LOGGER;
 
+	public PlaintextReporter(Logger logger) {
+		LOGGER = logger;
+	}
 }
