@@ -14,14 +14,6 @@ stages:
   - test
   - deploy
 
-compile:
-  tags:
-    - java-multi
-    - maven
-  stage: build
-  script:
-    - 'mvn $MAVEN_CLI_OPTS compile'
-
 release:
   tags:
     - java-multi
@@ -31,20 +23,6 @@ release:
     - release
   script:
     - 'mvn $MAVEN_CLI_OPTS deploy'
-
-unit_test:
-  tags:
-    - java-multi
-    - maven
-  stage: test
-  script:
-    - 'mvn $MAVEN_CLI_OPTS test'
-  retry: 2
-  artifacts:
-    reports:
-      junit:
-        - '*/target/surefire-reports/*.xml'
-        - '*/target/failsafe-reports/*.xml'
 
 verify:
   tags:
