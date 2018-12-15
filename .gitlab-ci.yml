@@ -11,8 +11,28 @@ cache:
 stages:
   - prepare
   - build
-  - test
+  - qa
   - deploy
+
+# This will only validate and compile stuff and run e.g. maven-enforcer-plugin.
+# Because some enforcer rules might check dependency convergence and class duplications
+# we use `test-compile` here instead of `validate`, so the correct classpath is picked up.
+validate:
+  tags:
+    - java11
+    - maven
+  stage: prepare
+  retry: 2
+  script:
+    - 'mvn $MAVEN_CLI_OPTS test-compile'
+
+compile:
+  tags:
+    - java-multi
+    - maven
+  stage: build
+  script:
+    - 'mvn $MAVEN_CLI_OPTS compile'
 
 release:
   tags:
@@ -28,7 +48,7 @@ verify:
   tags:
     - java-multi
     - maven
-  stage: test
+  stage: qa
   script:
     - 'mvn $MAVEN_CLI_OPTS verify'
     - "awk -F, '{ instructions += $4 + $5; covered += $5 } END { print covered, \"/\", instructions, \" instructions covered\"; print 100*covered/instructions, \"% covered\" }' */target/site/jacoco/jacoco.csv"
