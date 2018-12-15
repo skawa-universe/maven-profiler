@@ -51,7 +51,6 @@ verify:
   stage: qa
   script:
     - 'mvn $MAVEN_CLI_OPTS verify'
-    - 'ls -Rlah target/*'
     - "awk -F, '{ instructions += $4 + $5; covered += $5 } END { print covered, \"/\", instructions, \" instructions covered\"; print 100*covered/instructions, \"% covered\" }' target/site/jacoco/jacoco.csv"
   retry: 2
   coverage: '/\d+\.\d+\s*\%\s+covered/'
