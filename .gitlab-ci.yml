@@ -19,7 +19,7 @@ stages:
 # we use `test-compile` here instead of `validate`, so the correct classpath is picked up.
 validate:
   tags:
-    - java11
+    - java-multi
     - maven
   stage: prepare
   retry: 2
